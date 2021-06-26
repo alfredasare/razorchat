@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 
-const httpAuthorizedFunction = (_req: Request, res: Response) => {
+function httpAuthorizedFunction (_req: Request, res: Response) {
     res.send('Secured Resource');
 };
 
