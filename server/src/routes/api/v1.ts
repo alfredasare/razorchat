@@ -9,6 +9,6 @@ const api = express.Router();
 api.use('/auth', authRouter);
 api.use('/users', userRouter);
 api.use('/messages', messageRouter);
-api.use('/conversation', conversationRouter);
+api.use('/conversations', conversationRouter);
 
 export default api;

@@ -1,9 +1,17 @@
 import express from "express";
-import {httpBlockUserWithEmail, httpGetAllUsers, httpGetUserByEmail, httpUnblockUserWithEmail} from "./user.controller";
+import {
+    httpBlockUserWithEmail,
+    httpGetAllUsers,
+    httpGetUserByEmail,
+    httpGetUserById,
+    httpUnblockUserWithEmail
+} from "./user.controller";
 
 const userRouter = express.Router();
 
 userRouter.get('/user', httpGetUserByEmail);
+
+userRouter.get('/:id', httpGetUserById);
 
 userRouter.get('/allUsers', httpGetAllUsers);
 

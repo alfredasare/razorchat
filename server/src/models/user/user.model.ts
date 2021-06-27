@@ -1,9 +1,17 @@
 import {Document} from "mongoose";
 import User from "./user.mongo";
 
-
 async function getUserByEmail(email: string) {
     return User.findOne({email});
+}
+
+async function getUserById(id: string) {
+    return User.findById(id, {
+        email: 1,
+        username: 1,
+        client_id: 1,
+        blockedUsers: 1
+    });
 }
 
 async function getAllUsers() {
@@ -30,8 +38,10 @@ async function unblockUserWithEmail(email: string, emailToUnblock: string) {
     await modifiedUser.save();
 }
 
+
 export {
     getUserByEmail,
+    getUserById,
     getAllUsers,
     blockUserWithEmail,
     unblockUserWithEmail
