@@ -4,15 +4,23 @@ import { useAuth0 } from "@auth0/auth0-react";
 import {Switch, Route} from 'react-router-dom';
 import {createStructuredSelector} from "reselect";
 import {selectCurrentUser} from "./redux/user/user.selectors";
+import {getUserByEmailStart} from "./redux/user/user.actions";
 
 const HomePage = lazy(() => import('./pages/home'));
 const SignIn = lazy(() => import('./pages/signIn'));
 const Chat = lazy(() => import('./pages/chat'));
 
-function App() {
-    const { isAuthenticated, isLoading } = useAuth0();
+function App({currentUser, getUserByEmail}) {
+    const { isAuthenticated, isLoading, user } = useAuth0();
 
     useEffect(() => {
+        if (isAuthenticated) {
+            getUserByEmail(user.email);
+        }
+
+        console.log(isAuthenticated);
+
+        // eslint-disable-next-line
     }, [isAuthenticated]);
 
     if (isLoading) {
@@ -34,4 +42,8 @@ const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+    getUserByEmail: email => dispatch(getUserByEmailStart(email))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

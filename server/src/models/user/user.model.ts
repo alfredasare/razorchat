@@ -2,7 +2,12 @@ import {Document} from "mongoose";
 import User from "./user.mongo";
 
 async function getUserByEmail(email: string) {
-    return User.findOne({email});
+    return User.findOne({email}, {
+        email: 1,
+        username: 1,
+        client_id: 1,
+        blockedUsers: 1
+    });
 }
 
 async function getUserById(id: string) {

@@ -7,37 +7,27 @@ export const selectCurrentUser = createSelector(
     user => user.currentUser
 );
 
-export const selectIsLoadingEmail = createSelector(
+export const selectUserById = createSelector(
     [selectUser],
-    user => user.isLoadingEmail
+    user => user.userById
 );
 
-export const selectIsLoadingGoogle = createSelector(
+export const selectLoadingUserByEmail = createSelector(
     [selectUser],
-    user => user.isLoadingGoogle
+    user => user.loadingUserByEmail
 );
 
-export const selectSignUpSuccess = createSelector(
+export const selectLoadingUserById = createSelector(
     [selectUser],
-    user => user.signUpSuccess
+    user => user.loadingUserById
 );
 
-export const selectSignInSuccess = createSelector(
+export const selectUserByEmailError = createSelector(
     [selectUser],
-    user => user.signInSuccess
+    user => user.userByEmailError
 );
 
-export const selectGoogleSignInSuccess = createSelector(
+export const selectUserByIdError = createSelector(
     [selectUser],
-    user => user.googleSignInSuccess
-);
-
-export const selectEmailError = createSelector(
-    [selectUser],
-    user => user.error
-);
-
-export const selectGoogleSignInError = createSelector(
-    [selectUser],
-    user => user.googleSignInError
+    user => user.userByIdError
 );

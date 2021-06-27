@@ -6,7 +6,6 @@ import {
     Text,
     Link
 } from "@chakra-ui/react";
-import {signOutStart} from "../../redux/user/user.actions";
 
 const ProfileInfo = ({name, email}) => {
     const { logout } = useAuth0();
@@ -39,7 +38,7 @@ const ProfileInfo = ({name, email}) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    logout: () => dispatch(signOutStart()),
+
 });
 
 export default connect(null, mapDispatchToProps)(ProfileInfo);

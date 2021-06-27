@@ -1,4 +1,3 @@
-import {useEffect} from "react";
 import {connect} from "react-redux";
 import {useAuth0} from "@auth0/auth0-react";
 import {
@@ -9,25 +8,10 @@ import {
 } from "@chakra-ui/react";
 import Email from "./svg/email";
 import {createStructuredSelector} from "reselect";
-import {clearAuthStatus} from "../../redux/user/user.actions";
 
 
-const SignInForm = (
-    {
-        currentUser,
-        isLoading,
-        clearAuthProgressStatus
-    }
-) => {
+const SignInForm = () => {
     const { loginWithRedirect } = useAuth0();
-
-    useEffect(() => {
-        return () => {
-            clearAuthProgressStatus()
-        };
-
-        // eslint-disable-next-line
-    }, [currentUser, clearAuthProgressStatus]);
 
     return (
         <>
@@ -52,7 +36,6 @@ const SignInForm = (
 
             <Button
                 type="submit"
-                isLoading={isLoading}
                 loadingText="Signing in..."
                 leftIcon={<Email/>}
                 backgroundColor="brand.400"
@@ -91,7 +74,6 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-    clearAuthProgressStatus: () => dispatch(clearAuthStatus())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignInForm);

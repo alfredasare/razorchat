@@ -9,7 +9,7 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.get('/user', httpGetUserByEmail);
+userRouter.post('/email', httpGetUserByEmail);
 
 userRouter.get('/:id', httpGetUserById);
 
