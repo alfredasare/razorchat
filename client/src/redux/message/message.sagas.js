@@ -20,8 +20,8 @@ function* onGetMessagesStart() {
 
 function* sendMessage({payload}) {
     try {
-        const message = yield axios.post(baseUrl, {...payload});
-        yield put(sendMessageSuccess(message));
+        const {data} = yield axios.post(baseUrl, {...payload});
+        yield put(sendMessageSuccess(data.message));
     } catch (e) {
         yield put(sendMessageFailure(e.message));
     }

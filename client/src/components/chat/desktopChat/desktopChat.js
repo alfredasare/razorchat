@@ -8,7 +8,7 @@ import {
     Avatar,
     Text,
     Divider,
-    Button
+    Button, AvatarBadge
 } from "@chakra-ui/react";
 import ChatTile from "../chatTile";
 import MessageForm from "../messageForm";
@@ -117,7 +117,9 @@ const DesktopChat = (
                                 <Flex
                                     alignItems="center"
                                 >
-                                    <Avatar ml={5} size="md" name="Pokuah"/>
+                                    <Avatar ml={5} size="md" name={chattingWith.username}>
+                                        <AvatarBadge boxSize="1em" bg="green.500" />
+                                    </Avatar>
                                     <Text ml={4}>
                                         {chattingWith.username}
                                     </Text>
@@ -165,7 +167,7 @@ const DesktopChat = (
                             <Flex
                                 flex="0 0 65px"
                             >
-                                <MessageForm/>
+                                <MessageForm currentUser={currentUser} />
                             </Flex>
                         </Flex>
                     )

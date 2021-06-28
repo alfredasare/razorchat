@@ -4,7 +4,7 @@ import {
     Flex,
     Text,
     Avatar,
-    Spacer
+    Spacer, AvatarBadge
 } from "@chakra-ui/react";
 import {getUserByIdStart} from "../../redux/user/user.actions";
 import {createStructuredSelector} from "reselect";
@@ -33,7 +33,7 @@ const ChatTile = (
     }, [otherUserId, getUserById]);
 
     const handleSetConversation = (conversationId) => {
-        setChattingWith(userById);
+        setChattingWith({...userById, conversationId});
         getMessages(conversationId);
     };
 
@@ -54,7 +54,9 @@ const ChatTile = (
                 handleSetConversation(conversation._id)
             }}
         >
-            <Avatar size="md" name={userById?.username}/>
+            <Avatar size="md" name={userById?.username}>
+                <AvatarBadge boxSize="1em" bg="red" />
+            </Avatar>
             <Flex
                 direction="column"
                 ml={4}

@@ -1,3 +1,5 @@
+import {useState} from "react";
+import {connect} from "react-redux";
 import {
     Flex,
     FormControl,
@@ -6,8 +8,28 @@ import {
 } from "@chakra-ui/react";
 import ResizeTextarea from "react-textarea-autosize";
 import MessageIcon from "./svg/messageIcon";
+import {sendMessageStart} from "../../redux/message/message.actions";
+import useForm from "../../hooks/useForm";
+import {createStructuredSelector} from "reselect";
+import {selectChattingWith} from "../../redux/conversation/conversation.selectors";
 
-const MessageForm = () => {
+const MessageForm = ({sendMessage, currentUser, chattingWith}) => {
+
+    const [formData, setFormData] = useState({
+        message: ''
+    });
+
+    const {handleChange} = useForm(formData, setFormData);
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        sendMessage({
+            conversationId: chattingWith.conversationId,
+            sender: currentUser.id,
+            text: formData.message
+        });
+        setFormData({...formData, message: ''});
+    };
 
     return (
         <form
@@ -16,6 +38,7 @@ const MessageForm = () => {
                 margin: "auto",
                 padding: "10px 0"
             }}
+            onSubmit={handleSubmit}
         >
             <Flex
                 w="100%"
@@ -39,6 +62,8 @@ const MessageForm = () => {
                             boxShadow: "0 0 0 1px #000000 !important",
                             zIndex: 1
                         }}
+                        onChange={handleChange}
+                        value={formData.message}
                     />
                 </FormControl>
                 <IconButton
@@ -48,10 +73,19 @@ const MessageForm = () => {
                     size="lg"
                     backgroundColor="brand.300"
                     ml={5}
+                    onClick={handleSubmit}
                 />
             </Flex>
         </form>
     );
 };
 
-export default MessageForm;
+const mapStateToProps = createStructuredSelector({
+    chattingWith: selectChattingWith
+});
+
+const mapDispatchToProps = dispatch => ({
+    sendMessage: payload => dispatch(sendMessageStart(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageForm);
