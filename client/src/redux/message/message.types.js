@@ -1,0 +1,7 @@
+const MessageActionTypes = {
+    GET_MESSAGES_START: 'GET_MESSAGES_START',
+    GET_MESSAGES_SUCCESS: 'GET_MESSAGES_SUCCESS',
+    GET_MESSAGES_FAILURE: 'GET_MESSAGES_FAILURE'
+};
+
+export default MessageActionTypes;

@@ -1,11 +1,39 @@
+import {useEffect} from "react";
+import {connect} from "react-redux";
 import {
     Flex,
     Text,
     Avatar,
     Spacer
 } from "@chakra-ui/react";
+import {getUserByIdStart} from "../../redux/user/user.actions";
+import {createStructuredSelector} from "reselect";
+import {selectLoadingUserById, selectUserById} from "../../redux/user/user.selectors";
 
-const ChatTile = ({name, lastMessage, sent, active, handleActive, conversation}) => {
+const ChatTile = (
+    {
+        name,
+        active,
+        handleActive,
+        conversation,
+        currentUser,
+        userById,
+        isLoadingUserById,
+        getUserById
+    }
+) => {
+
+    const otherUserId = conversation.members.find(id => id !== currentUser.id);
+
+    useEffect(() => {
+        getUserById(otherUserId);
+
+    }, [otherUserId, getUserById]);
+
+    const handleSetConversation = (conversationId) => {
+        console.log(userById?.id);
+        console.log(conversationId);
+    };
 
     return (
         <Flex
@@ -19,9 +47,12 @@ const ChatTile = ({name, lastMessage, sent, active, handleActive, conversation})
             _hover={{
                 backgroundColor: "brand.300"
             }}
-            onClick={() => {handleActive(conversation._id)}}
+            onClick={() => {
+                handleActive(conversation._id)
+                handleSetConversation(conversation._id)
+            }}
         >
-            <Avatar size="md" name={name}/>
+            <Avatar size="md" name={userById?.username}/>
             <Flex
                 direction="column"
                 ml={4}
@@ -32,7 +63,11 @@ const ChatTile = ({name, lastMessage, sent, active, handleActive, conversation})
                     whiteSpace="none"
                     maxW={180}
                 >
-                    {name}
+                    {
+                        !userById
+                            ? `Loading...`
+                            : userById?.username
+                    }
                 </Text>
                 <Text
                     noOfLines={1}
@@ -40,15 +75,24 @@ const ChatTile = ({name, lastMessage, sent, active, handleActive, conversation})
                     whiteSpace="none"
                     maxW={180}
                 >
-                    {lastMessage}
+                    Ok oooo
                 </Text>
             </Flex>
             <Spacer/>
             <Text mt={2.5}>
-                {sent} ago
+                9m ago
             </Text>
         </Flex>
     );
 };
 
-export default ChatTile;
+const mapStateToProps = createStructuredSelector({
+    userById: selectUserById,
+    isLoadingUserById: selectLoadingUserById
+});
+
+const mapDispatchToProps = dispatch => ({
+    getUserById: id => dispatch(getUserByIdStart(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatTile);

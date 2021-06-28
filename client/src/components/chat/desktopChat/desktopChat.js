@@ -24,7 +24,16 @@ import {getConversationsStart} from "../../../redux/conversation/conversation.ac
 import {selectCurrentUser} from "../../../redux/user/user.selectors";
 
 const DesktopChat = (
-    {user, conversations, isLoadingConversations, getConversations, currentUser}
+    {
+        user,
+        conversations,
+        isLoadingConversations,
+        getConversations,
+        currentUser,
+        getUserById,
+        isLoadingUserById,
+        userById
+    }
 ) => {
     useEffect(() => {
         if (currentUser) {
@@ -34,7 +43,7 @@ const DesktopChat = (
 
     const [active, setActive] = useState("");
 
-    const handleActive = chatTileId => {
+    const handleActive = (chatTileId) => {
         setActive(chatTileId);
     };
 
@@ -71,10 +80,8 @@ const DesktopChat = (
                             key={item._id}
                             conversation={item}
                             active={active}
+                            currentUser={currentUser}
                             handleActive={handleActive}
-                            name="Alfred"
-                            lastMessage="See you!"
-                            sent="9m"
                         />
                     ))
                 }

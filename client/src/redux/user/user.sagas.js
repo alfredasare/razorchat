@@ -23,8 +23,8 @@ function* onGetUserByEmail() {
 //  Set user by id
 function* getUserById({payload}) {
     try {
-        const user = yield axios.get(`${baseUrl}/${payload}`);
-        yield put(getUserByIdSuccess(user.data));
+        const {data} = yield axios.get(`${baseUrl}/${payload}`);
+        yield put(getUserByIdSuccess(data.user));
     } catch (e) {
         yield put(getUserByIdFailure(e.response.data));
     }

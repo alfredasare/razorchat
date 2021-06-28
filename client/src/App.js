@@ -18,8 +18,6 @@ function App({currentUser, getUserByEmail}) {
             getUserByEmail(user.email);
         }
 
-        console.log(isAuthenticated);
-
         // eslint-disable-next-line
     }, [isAuthenticated]);
 
