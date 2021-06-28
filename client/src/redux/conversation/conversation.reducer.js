@@ -3,7 +3,8 @@ import ConversationActionTypes from "./conversation.types";
 const INITIAL_STATE = {
     conversations: [],
     isLoadingConversations: false,
-    conversationsError: ''
+    conversationsError: '',
+    chattingWith: null
 };
 
 const conversationReducer = (state = INITIAL_STATE, action) => {
@@ -28,6 +29,12 @@ const conversationReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 isLoadingConversations: false,
                 conversationsError: action.payload
+            };
+
+        case ConversationActionTypes.SET_CHATTING_WITH:
+            return {
+                ...state,
+                chattingWith: action.payload
             };
 
         default:

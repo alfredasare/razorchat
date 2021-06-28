@@ -17,11 +17,12 @@ import SearchForm from "../searchForm";
 import ProfileInfo from "../profileInfo";
 import {createStructuredSelector} from "reselect";
 import {
-    selectAllConversations,
+    selectAllConversations, selectChattingWith,
     selectIsLoadingConversations
 } from "../../../redux/conversation/conversation.selectors";
 import {getConversationsStart} from "../../../redux/conversation/conversation.actions";
 import {selectCurrentUser} from "../../../redux/user/user.selectors";
+import {selectAllMessages, selectIsLoadingMessages} from "../../../redux/message/message.selectors";
 
 const DesktopChat = (
     {
@@ -30,9 +31,9 @@ const DesktopChat = (
         isLoadingConversations,
         getConversations,
         currentUser,
-        getUserById,
-        isLoadingUserById,
-        userById
+        isLoadingMessages,
+        messages,
+        chattingWith
     }
 ) => {
     useEffect(() => {
@@ -88,68 +89,87 @@ const DesktopChat = (
 
             </Container>
 
-            <Flex
-                direction="column"
-                flex="1 0 auto"
-            >
-                <Flex
-                    flex="0 0 60px"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    py={2}
-                >
-                    <Flex
-                        alignItems="center"
-                    >
-                        <Avatar ml={5} size="md" name="Pokuah"/>
-                        <Text ml={4}>
-                            Pokuah
-                        </Text>
-                    </Flex>
-                    <Button
-                        mr={5}
-                        color="brand.400"
-                    >
-                        Block Pokuah
-                    </Button>
-                </Flex>
+            {
+                !chattingWith
+                    ? (
+                        <Flex
+                            direction="column"
+                            flex="1 0 auto"
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Text fontSize={21} color="brand.800">
+                                Select any conversation to show messages here
+                            </Text>
+                        </Flex>
+                    )
+                    : (
+                        <Flex
+                            direction="column"
+                            flex="1 0 auto"
+                        >
+                            <Flex
+                                flex="0 0 60px"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                py={2}
+                            >
+                                <Flex
+                                    alignItems="center"
+                                >
+                                    <Avatar ml={5} size="md" name="Pokuah"/>
+                                    <Text ml={4}>
+                                        {chattingWith.username}
+                                    </Text>
+                                </Flex>
+                                <Button
+                                    mr={5}
+                                    color="brand.400"
+                                >
+                                    Block {chattingWith.username}
+                                </Button>
+                            </Flex>
 
-                <Divider/>
+                            <Divider/>
 
-                <Flex
-                    flex="1 0 100px"
-                    h="100%"
-                    overflowY="scroll"
-                    px={10}
-                    py={5}
-                >
-                    <Flex
-                        direction="column"
-                        w="100%"
-                    >
-                        <ChatBubble position="left" message="Hello. How are you doing?
-                        Hello. How are you doing? Hello. How are you doing?
-                        Hello. How are you doing? Hello. How are you doing?
-                        Hello. How are you doing? Hello. How are you doing?" time="2m ago"/>
-                        <ChatBubble position="left" message="Hello. How are you doing?" time="2m ago"/>
-                        <ChatBubble position="right" message="I saw you" time="50s ago"/>
-                        <ChatBubble position="right" message="Around the coffee shop" time="50s ago"/>
-                        <ChatBubble position="left" message="Really?" time="50s ago"/>
-                        <ChatBubble position="left" message="When?" time="50s ago"/>
-                        <ChatBubble position="right" message="Around 12pm" time="50s ago"/>
-                        <ChatBubble position="right" message="You were walking with Fidel" time="50s ago"/>
-                        <ChatBubble position="left" message="Oh ok" time="50s ago"/>
-                    </Flex>
-                </Flex>
+                            <Flex
+                                flex="1 0 100px"
+                                h="100%"
+                                overflowY="scroll"
+                                px={10}
+                                py={5}
+                            >
+                                <Flex
+                                    direction="column"
+                                    w="100%"
+                                >
+                                    {
+                                        isLoadingMessages
+                                            ? (<Text>Loading messages...</Text>)
+                                            : (
+                                                messages.map(message => (
+                                                    <ChatBubble
+                                                        key={message._id}
+                                                        position={currentUser.id === message.sender ? 'right' : 'left' }
+                                                        message={message.text}
+                                                        time="30 mins ago"
+                                                    />
+                                                ))
+                                            )
+                                    }
+                                </Flex>
+                            </Flex>
 
-                <Divider/>
+                            <Divider/>
 
-                <Flex
-                    flex="0 0 65px"
-                >
-                    <MessageForm/>
-                </Flex>
-            </Flex>
+                            <Flex
+                                flex="0 0 65px"
+                            >
+                                <MessageForm/>
+                            </Flex>
+                        </Flex>
+                    )
+            }
         </Grid>
     );
 };
@@ -157,7 +177,10 @@ const DesktopChat = (
 const mapStateToProps = createStructuredSelector({
     conversations: selectAllConversations,
     isLoadingConversations: selectIsLoadingConversations,
-    currentUser: selectCurrentUser
+    currentUser: selectCurrentUser,
+    isLoadingMessages: selectIsLoadingMessages,
+    messages: selectAllMessages,
+    chattingWith: selectChattingWith
 });
 
 const mapDispatchToProps = dispatch => ({

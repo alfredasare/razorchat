@@ -4,15 +4,20 @@ const selectConversation = state => state.conversation
 
 export const selectAllConversations = createSelector(
     [selectConversation],
-    user => user.conversations
+    conversation => conversation.conversations
 );
 
 export const selectIsLoadingConversations = createSelector(
     [selectConversation],
-    user => user.isLoadingConversations
+    conversation => conversation.isLoadingConversations
 );
 
 export const selectConversationsError = createSelector(
     [selectConversation],
-    user => user.conversationsError
+    conversation => conversation.conversationsError
+);
+
+export const selectChattingWith = createSelector(
+    [selectConversation],
+    conversation => conversation.chattingWith
 );

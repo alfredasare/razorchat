@@ -9,17 +9,19 @@ import {
 import {getUserByIdStart} from "../../redux/user/user.actions";
 import {createStructuredSelector} from "reselect";
 import {selectLoadingUserById, selectUserById} from "../../redux/user/user.selectors";
+import {getMessagesStart} from "../../redux/message/message.actions";
+import {setChattingWith} from "../../redux/conversation/conversation.actions";
 
 const ChatTile = (
     {
-        name,
         active,
         handleActive,
         conversation,
         currentUser,
         userById,
-        isLoadingUserById,
-        getUserById
+        getUserById,
+        getMessages,
+        setChattingWith
     }
 ) => {
 
@@ -31,8 +33,8 @@ const ChatTile = (
     }, [otherUserId, getUserById]);
 
     const handleSetConversation = (conversationId) => {
-        console.log(userById?.id);
-        console.log(conversationId);
+        setChattingWith(userById);
+        getMessages(conversationId);
     };
 
     return (
@@ -92,7 +94,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getUserById: id => dispatch(getUserByIdStart(id))
+    getUserById: id => dispatch(getUserByIdStart(id)),
+    getMessages: id => dispatch(getMessagesStart(id)),
+    setChattingWith: user => dispatch(setChattingWith(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatTile);
