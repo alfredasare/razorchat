@@ -1,4 +1,5 @@
 import {Flex, Text} from "@chakra-ui/react";
+import {format} from "timeago.js";
 
 const ChatBubble = ({position, message, time}) => {
 
@@ -21,7 +22,7 @@ const ChatBubble = ({position, message, time}) => {
                     {message}
                 </Text>
                 <Text mb={5} fontSize={12} textAlign={position}>
-                    {time}
+                    {format(time)}
                 </Text>
             </Flex>
         </Flex>

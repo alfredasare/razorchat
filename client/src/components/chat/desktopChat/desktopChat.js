@@ -154,7 +154,7 @@ const DesktopChat = (
                                                         key={message._id}
                                                         position={currentUser.id === message.sender ? 'right' : 'left' }
                                                         message={message.text}
-                                                        time="30 mins ago"
+                                                        time={message.createdAt}
                                                     />
                                                 ))
                                             )
