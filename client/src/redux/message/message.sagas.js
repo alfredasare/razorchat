@@ -1,7 +1,7 @@
 import {takeLatest, put, all, call} from 'redux-saga/effects';
 import MessageActionTypes from "./message.types";
 import axios from "axios";
-import {getMessagesFailure, getMessagesSuccess} from "./message.actions";
+import {getMessagesFailure, getMessagesSuccess, sendMessageFailure, sendMessageSuccess} from "./message.actions";
 
 const baseUrl = 'http://localhost:8000/v1/messages';
 
@@ -18,8 +18,22 @@ function* onGetMessagesStart() {
     yield takeLatest(MessageActionTypes.GET_MESSAGES_START, getAllMessages);
 }
 
+function* sendMessage({payload}) {
+    try {
+        const message = yield axios.post(baseUrl, {...payload});
+        yield put(sendMessageSuccess(message));
+    } catch (e) {
+        yield put(sendMessageFailure(e.message));
+    }
+}
+
+function* onSendMessageStart() {
+    yield takeLatest(MessageActionTypes.SEND_MESSAGE_START, sendMessage);
+}
+
 export function* messageSagas() {
     yield all([
-        call(onGetMessagesStart)
+        call(onGetMessagesStart),
+        call(onSendMessageStart)
     ]);
 }
