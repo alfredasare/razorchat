@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import {connect} from "react-redux";
 import {
     Container,
     Flex,
@@ -14,8 +15,23 @@ import MessageForm from "../messageForm";
 import ChatBubble from "../chatBubble";
 import SearchForm from "../searchForm";
 import ProfileInfo from "../profileInfo";
+import {createStructuredSelector} from "reselect";
+import {
+    selectAllConversations,
+    selectIsLoadingConversations
+} from "../../../redux/conversation/conversation.selectors";
+import {getConversationsStart} from "../../../redux/conversation/conversation.actions";
+import {selectCurrentUser} from "../../../redux/user/user.selectors";
 
-const DesktopChat = ({user}) => {
+const DesktopChat = (
+    {user, conversations, isLoadingConversations, getConversations, currentUser}
+) => {
+    useEffect(() => {
+        if (currentUser) {
+            getConversations(currentUser.id);
+        }
+    }, [currentUser, getConversations]);
+
     const [active, setActive] = useState("");
 
     const handleActive = chatTileId => {
@@ -46,10 +62,14 @@ const DesktopChat = ({user}) => {
                 <SearchForm />
 
                 {
-                    [1, 2, 3, 4].map((item, index) => (
+                    isLoadingConversations ? (
+                        <Text mt={5}>
+                            Loading conversations...
+                        </Text>
+                    ) : conversations.map((item) => (
                         <ChatTile
-                            key={`adasd` + index}
-                            id={`${index}`}
+                            key={item._id}
+                            conversation={item}
                             active={active}
                             handleActive={handleActive}
                             name="Alfred"
@@ -127,4 +147,14 @@ const DesktopChat = ({user}) => {
     );
 };
 
-export default DesktopChat;
+const mapStateToProps = createStructuredSelector({
+    conversations: selectAllConversations,
+    isLoadingConversations: selectIsLoadingConversations,
+    currentUser: selectCurrentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+    getConversations: userId => dispatch(getConversationsStart(userId))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DesktopChat);

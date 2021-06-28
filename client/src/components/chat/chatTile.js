@@ -5,7 +5,7 @@ import {
     Spacer
 } from "@chakra-ui/react";
 
-const ChatTile = ({name, lastMessage, sent, active, handleActive, id}) => {
+const ChatTile = ({name, lastMessage, sent, active, handleActive, conversation}) => {
 
     return (
         <Flex
@@ -14,12 +14,12 @@ const ChatTile = ({name, lastMessage, sent, active, handleActive, id}) => {
             py={3}
             px={5}
             cursor="pointer"
-            backgroundColor={active === id ? "brand.300" : "brand.100"}
+            backgroundColor={active === conversation._id ? "brand.300" : "brand.100"}
             borderRadius={30}
             _hover={{
                 backgroundColor: "brand.300"
             }}
-            onClick={() => {handleActive(id)}}
+            onClick={() => {handleActive(conversation._id)}}
         >
             <Avatar size="md" name={name}/>
             <Flex
