@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {connect} from "react-redux";
 import {
     Container,
@@ -8,7 +8,7 @@ import {
     Avatar,
     Text,
     Divider,
-    Button, AvatarBadge
+    Button, AvatarBadge, Box
 } from "@chakra-ui/react";
 import ChatTile from "../chatTile";
 import MessageForm from "../messageForm";
@@ -43,6 +43,12 @@ const DesktopChat = (
     }, [currentUser, getConversations]);
 
     const [active, setActive] = useState("");
+
+    const scrollRef = useRef();
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({behavior: "smooth"});
+    }, [messages]);
 
     const handleActive = (chatTileId) => {
         setActive(chatTileId);
@@ -150,12 +156,13 @@ const DesktopChat = (
                                             ? (<Text>Loading messages...</Text>)
                                             : (
                                                 messages.map(message => (
-                                                    <ChatBubble
-                                                        key={message._id}
-                                                        position={currentUser.id === message.sender ? 'right' : 'left' }
-                                                        message={message.text}
-                                                        time={message.createdAt}
-                                                    />
+                                                    <Box ref={scrollRef} key={message._id}>
+                                                        <ChatBubble
+                                                            position={currentUser.id === message.sender ? 'right' : 'left' }
+                                                            message={message.text}
+                                                            time={message.createdAt}
+                                                        />
+                                                    </Box>
                                                 ))
                                             )
                                     }
