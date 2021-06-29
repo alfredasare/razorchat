@@ -13,7 +13,7 @@ import useForm from "../../hooks/useForm";
 import {createStructuredSelector} from "reselect";
 import {selectChattingWith} from "../../redux/conversation/conversation.selectors";
 
-const MessageForm = ({sendMessage, currentUser, chattingWith}) => {
+const MessageForm = ({sendMessage, currentUser, chattingWith, socket}) => {
 
     const [formData, setFormData] = useState({
         message: ''
@@ -26,6 +26,12 @@ const MessageForm = ({sendMessage, currentUser, chattingWith}) => {
         sendMessage({
             conversationId: chattingWith.conversationId,
             sender: currentUser.id,
+            text: formData.message
+        });
+        socket.current.emit("sendMessage", {
+            senderId: currentUser.id,
+            receiverId: chattingWith.id,
+            conversationId: chattingWith.conversationId,
             text: formData.message
         });
         setFormData({...formData, message: ''});

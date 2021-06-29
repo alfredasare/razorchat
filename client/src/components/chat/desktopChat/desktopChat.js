@@ -1,5 +1,7 @@
 import {useState, useEffect, useRef} from "react";
 import {connect} from "react-redux";
+import {io} from "socket.io-client";
+import {v4} from 'uuid';
 import {
     Container,
     Flex,
@@ -23,6 +25,7 @@ import {
 import {getConversationsStart} from "../../../redux/conversation/conversation.actions";
 import {selectCurrentUser} from "../../../redux/user/user.selectors";
 import {selectAllMessages, selectIsLoadingMessages} from "../../../redux/message/message.selectors";
+import {sendMessageSuccess} from "../../../redux/message/message.actions";
 
 const DesktopChat = (
     {
@@ -33,22 +36,56 @@ const DesktopChat = (
         currentUser,
         isLoadingMessages,
         messages,
-        chattingWith
+        chattingWith,
+        sendMessage
     }
 ) => {
+    const [active, setActive] = useState("");
+    const socket = useRef(null);
+    const [newMessage, setNewMessage] = useState(null);
+
+    const scrollRef = useRef();
+
     useEffect(() => {
         if (currentUser) {
             getConversations(currentUser.id);
         }
     }, [currentUser, getConversations]);
 
-    const [active, setActive] = useState("");
-
-    const scrollRef = useRef();
-
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages]);
+
+    useEffect(() => {
+        socket.current = io('http://localhost:8000');
+        socket.current.on("getMessage", data => {
+            setNewMessage({
+                sender: data.senderId,
+                text: data.text,
+                createdAt: Date.now(),
+                conversationId: data.conversationId
+            });
+        });
+
+        //  eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        if (newMessage && chattingWith.conversationId === newMessage.conversationId) {
+            sendMessage(newMessage);
+        }
+
+        //  eslint-disable-next-line
+    }, [newMessage]);
+
+    useEffect(() => {
+        currentUser && socket.current.emit("addUser", currentUser?.id);
+        socket.current.on("getUsers", users => {
+            console.log(users);
+        });
+
+        // eslint-disable-next-line
+    }, [currentUser]);
 
     const handleActive = (chatTileId) => {
         setActive(chatTileId);
@@ -156,7 +193,7 @@ const DesktopChat = (
                                             ? (<Text>Loading messages...</Text>)
                                             : (
                                                 messages.map(message => (
-                                                    <Box ref={scrollRef} key={message._id}>
+                                                    <Box ref={scrollRef} key={message._id || v4()}>
                                                         <ChatBubble
                                                             position={currentUser.id === message.sender ? 'right' : 'left' }
                                                             message={message.text}
@@ -174,7 +211,7 @@ const DesktopChat = (
                             <Flex
                                 flex="0 0 65px"
                             >
-                                <MessageForm currentUser={currentUser} />
+                                <MessageForm currentUser={currentUser} socket={socket}/>
                             </Flex>
                         </Flex>
                     )
@@ -193,7 +230,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getConversations: userId => dispatch(getConversationsStart(userId))
+    getConversations: userId => dispatch(getConversationsStart(userId)),
+    sendMessage: message => dispatch(sendMessageSuccess(message))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DesktopChat);
