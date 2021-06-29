@@ -20,7 +20,12 @@ async function getUserById(id: string) {
 }
 
 async function getAllUsers() {
-    return User.find({});
+    return User.find({}, {
+        email: 1,
+        username: 1,
+        client_id: 1,
+        blockedUsers: 1
+    });
 }
 
 async function blockUserWithEmail(email: string, emailToBlock: string) {
