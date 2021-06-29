@@ -11,12 +11,12 @@ const userRouter = express.Router();
 
 userRouter.post('/email', httpGetUserByEmail);
 
-userRouter.get('/:id', httpGetUserById);
-
-userRouter.get('/allUsers', httpGetAllUsers);
+userRouter.get('/all', httpGetAllUsers);
 
 userRouter.post('/block', httpBlockUserWithEmail);
 
 userRouter.post('/unblock', httpUnblockUserWithEmail);
+
+userRouter.get('/:id', httpGetUserById);
 
 export default userRouter;
