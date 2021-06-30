@@ -1,20 +1,15 @@
 import {useState, useEffect, useRef} from "react";
 import {connect} from "react-redux";
 import {io} from "socket.io-client";
-import {v4} from 'uuid';
 import {
     Container,
     Flex,
     Grid,
     Heading,
-    Avatar,
     Text,
-    Divider,
-    Button, AvatarBadge, Box
+    Divider
 } from "@chakra-ui/react";
 import ChatTile from "../chatTile";
-import MessageForm from "../messageForm";
-import ChatBubble from "../chatBubble";
 import SearchForm from "../searchForm";
 import ProfileInfo from "../profileInfo";
 import {createStructuredSelector} from "reselect";
@@ -28,6 +23,7 @@ import {selectAllMessages, selectIsLoadingMessages} from "../../../redux/message
 import {sendMessageSuccess} from "../../../redux/message/message.actions";
 import {getAllUsersStart} from "../../../redux/user/user.actions";
 import OtherUserChatTile from "../otherUserChatTile";
+import ChatSection from "../chatSection";
 
 const DesktopChat = (
     {
@@ -50,8 +46,6 @@ const DesktopChat = (
     const socket = useRef(null);
     const [newMessage, setNewMessage] = useState(null);
 
-    const scrollRef = useRef();
-
     useEffect(() => {
         if (currentUser) {
             getConversations(currentUser.id);
@@ -70,10 +64,6 @@ const DesktopChat = (
     }, [isLoadingConversations]);
 
     useEffect(() => {
-        scrollRef.current?.scrollIntoView({behavior: "smooth"});
-    }, [messages]);
-
-    useEffect(() => {
         socket.current = io('http://localhost:8000');
         socket.current.on("getMessage", data => {
             setNewMessage({
@@ -88,7 +78,7 @@ const DesktopChat = (
     }, []);
 
     useEffect(() => {
-        if (newMessage && chattingWith.conversationId === newMessage.conversationId) {
+        if (newMessage && chattingWith?.conversationId === newMessage?.conversationId) {
             sendMessage(newMessage);
         }
 
@@ -193,73 +183,13 @@ const DesktopChat = (
                         </Flex>
                     )
                     : (
-                        <Flex
-                            direction="column"
-                            flex="1 0 auto"
-                        >
-                            <Flex
-                                flex="0 0 60px"
-                                alignItems="center"
-                                justifyContent="space-between"
-                                py={2}
-                            >
-                                <Flex
-                                    alignItems="center"
-                                >
-                                    <Avatar ml={5} size="md" name={chattingWith.username}>
-                                        <AvatarBadge boxSize="1em" bg="green.500" />
-                                    </Avatar>
-                                    <Text ml={4}>
-                                        {chattingWith.username}
-                                    </Text>
-                                </Flex>
-                                <Button
-                                    mr={5}
-                                    color="brand.400"
-                                >
-                                    Block {chattingWith.username}
-                                </Button>
-                            </Flex>
-
-                            <Divider/>
-
-                            <Flex
-                                flex="1 0 100px"
-                                h="100%"
-                                overflowY="scroll"
-                                px={10}
-                                py={5}
-                            >
-                                <Flex
-                                    direction="column"
-                                    w="100%"
-                                >
-                                    {
-                                        isLoadingMessages
-                                            ? (<Text>Loading messages...</Text>)
-                                            : (
-                                                messages.map(message => (
-                                                    <Box ref={scrollRef} key={message._id || v4()}>
-                                                        <ChatBubble
-                                                            position={currentUser.id === message.sender ? 'right' : 'left' }
-                                                            message={message.text}
-                                                            time={message.createdAt}
-                                                        />
-                                                    </Box>
-                                                ))
-                                            )
-                                    }
-                                </Flex>
-                            </Flex>
-
-                            <Divider/>
-
-                            <Flex
-                                flex="0 0 65px"
-                            >
-                                <MessageForm currentUser={currentUser} socket={socket}/>
-                            </Flex>
-                        </Flex>
+                        <ChatSection
+                            chattingWith={chattingWith}
+                            currentUser={currentUser}
+                            messages={messages}
+                            isLoadingMessages={isLoadingMessages}
+                            socket={socket}
+                        />
                     )
             }
         </Grid>

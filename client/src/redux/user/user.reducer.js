@@ -7,9 +7,10 @@ const INITIAL_VALUE = {
     loadingUserById: false,
     userByEmailError: '',
     userByIdError: '',
-    allUsers: null,
+    allUsers: [],
     isLoadingAllUsers: false,
-    allUsersError: ''
+    allUsersError: '',
+    allConversationUsers: []
 };
 
 const userReducer = (state = INITIAL_VALUE, action) => {
@@ -48,7 +49,7 @@ const userReducer = (state = INITIAL_VALUE, action) => {
                 ...state,
                 loadingUserById: false,
                 userByIdError: '',
-                userById: action.payload
+                allConversationUsers: state.allConversationUsers.concat(action.payload)
             };
 
         case UserActionTypes.GET_USER_BY_ID_FAILURE:
@@ -70,7 +71,7 @@ const userReducer = (state = INITIAL_VALUE, action) => {
                 ...state,
                 isLoadingAllUsers: false,
                 allUsersError: '',
-                allUsers: action.payload
+                allUsers: state.allUsers.concat(action.payload)
             };
 
         case UserActionTypes.GET_ALL_USERS_FAILURE:
@@ -78,6 +79,12 @@ const userReducer = (state = INITIAL_VALUE, action) => {
                 ...state,
                 allUsersError: action.payload,
                 isLoadingAllUsers: false
+            };
+
+        case UserActionTypes.UPDATE_CONVERSATION_USERS:
+            return {
+                ...state,
+                allUsers: state.allUsers.filter(user => user.id !== action.payload)
             };
 
         default:

@@ -1,4 +1,4 @@
-import {all, call, put, takeLatest} from 'redux-saga/effects';
+import {all, call, put, takeLatest, takeEvery} from 'redux-saga/effects';
 import UserActionTypes from "./user.types";
 import axios from "axios";
 import {
@@ -37,17 +37,17 @@ function* getUserById({payload}) {
 }
 
 function* onGetUserById() {
-    yield takeLatest(UserActionTypes.GET_USER_BY_ID_START, getUserById);
+    yield takeEvery(UserActionTypes.GET_USER_BY_ID_START, getUserById);
 }
 
 function getOtherUsers(userId, allUsers, conversations) {
-    const [conversationUsersArray] = conversations.map(conversation => {
-        return conversation.members.filter(id => id !== userId);
+    const all = [];
+
+    conversations.forEach(conversation => {
+        all.push(...conversation.members.filter(id => id !== userId));
     });
 
-    const conversationUsers = conversationUsersArray ?? [];
-
-    return allUsers.filter(user => !conversationUsers.includes(user.id));
+    return allUsers.filter(user => !all.includes(user.id));
 }
 
 //  Get All Users

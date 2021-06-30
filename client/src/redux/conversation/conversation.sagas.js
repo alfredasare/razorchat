@@ -8,6 +8,7 @@ import {
     getConversationsSuccess, setChattingWith
 } from "./conversation.actions";
 import {getMessagesStart} from "../message/message.actions";
+import {updateConversationUsers} from "../user/user.actions";
 
 
 const baseUrl = 'http://localhost:8000/v1/conversations';
@@ -33,6 +34,7 @@ function* createConversation({payload}) {
         });
         const conversationId = data.conversation._id;
         yield put(createConversationSuccess(data.conversation));
+        yield put(updateConversationUsers(payload.user.id));
         yield put(setChattingWith({...payload.user, conversationId}));
         yield put(getMessagesStart(conversationId));
     } catch (e) {

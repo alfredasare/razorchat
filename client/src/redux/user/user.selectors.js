@@ -37,6 +37,11 @@ export const selectAllUsers = createSelector(
     user => user.allUsers
 );
 
+export const selectAllConversationUsers = createSelector(
+    [selectUser],
+    user => user.allConversationUsers
+);
+
 export const selectIsLoadingAllUsers = createSelector(
     [selectUser],
     user => user.isLoadingAllUsers

@@ -47,3 +47,8 @@ export const getAllUsersFailure = error => ({
     type: UserActionTypes.GET_ALL_USERS_FAILURE,
     payload: error
 });
+
+export const updateConversationUsers = id => ({
+    type: UserActionTypes.UPDATE_CONVERSATION_USERS,
+    payload: id
+});

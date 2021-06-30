@@ -79,6 +79,7 @@ const OtherUserChatTile = (
                     whiteSpace="none"
                     maxW={180}
                     ml={3}
+                    textTransform="capitalize"
                 >
                     {
                         !user

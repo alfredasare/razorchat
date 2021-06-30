@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import {getUserByIdStart} from "../../redux/user/user.actions";
 import {createStructuredSelector} from "reselect";
-import {selectLoadingUserById, selectUserById} from "../../redux/user/user.selectors";
+import {selectAllConversationUsers, selectLoadingUserById, selectUserById} from "../../redux/user/user.selectors";
 import {getMessagesStart} from "../../redux/message/message.actions";
 import {setChattingWith} from "../../redux/conversation/conversation.actions";
 
@@ -18,7 +18,7 @@ const ChatTile = (
         handleActive,
         conversation,
         currentUser,
-        userById,
+        allConversationUsers,
         getUserById,
         getMessages,
         setChattingWith,
@@ -27,6 +27,7 @@ const ChatTile = (
 ) => {
 
     const otherUserId = conversation.members.find(id => id !== currentUser.id);
+    const userById = allConversationUsers.find(user => user.id === otherUserId);
 
     const filterUsers = onlineUsers.filter(user => user.userId !== currentUser.id);
     const isOnline = filterUsers.some(filteredUser => filteredUser.userId === userById?.id);
@@ -63,6 +64,7 @@ const ChatTile = (
             </Avatar>
             <Flex
                 direction="column"
+                justifyContent="center"
                 ml={4}
             >
                 <Text
@@ -70,6 +72,8 @@ const ChatTile = (
                     isTruncated
                     whiteSpace="none"
                     maxW={180}
+                    ml={3}
+                    textTransform="capitalize"
                 >
                     {
                         !userById
@@ -77,25 +81,14 @@ const ChatTile = (
                             : userById?.username
                     }
                 </Text>
-                <Text
-                    noOfLines={1}
-                    isTruncated
-                    whiteSpace="none"
-                    maxW={180}
-                >
-                    Ok oooo
-                </Text>
             </Flex>
             <Spacer/>
-            <Text mt={2.5}>
-                9m ago
-            </Text>
         </Flex>
     );
 };
 
 const mapStateToProps = createStructuredSelector({
-    userById: selectUserById,
+    allConversationUsers: selectAllConversationUsers,
     isLoadingUserById: selectLoadingUserById
 });
 
