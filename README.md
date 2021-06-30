@@ -32,5 +32,24 @@ This runs the client side of the application.
 Runs both the backend server and the client side development server concurrently.
 
 **Note: This operation makes use of the `&` operator which runs both `npm run server` and `npm run client` concurrently. This operator currently only
-works for Unix-based systems. On Windows, an external package like `concurrently` can assist in achieving the same effect. 
+works for Unix-based systems. On Windows, an external package like `concurrently` can assist in achieving the same effect.** 
 
+
+# The Stack
+
+## Frontend
+* JavaScript
+* React
+* Redux
+* Auth0-React
+* Chakra-UI
+* Socketio-client
+
+## Backend
+* TypeScript
+* NodeJS
+* Express
+* MongoDB
+* Socketio
+* Morgan
+* Auth0
