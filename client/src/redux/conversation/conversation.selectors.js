@@ -17,6 +17,16 @@ export const selectConversationsError = createSelector(
     conversation => conversation.conversationsError
 );
 
+export const selectIsCreatingConversation = createSelector(
+    [selectConversation],
+    conversation => conversation.isCreatingConversation
+);
+
+export const selectCreateConversationError = createSelector(
+    [selectConversation],
+    conversation => conversation.createConversationError
+);
+
 export const selectChattingWith = createSelector(
     [selectConversation],
     conversation => conversation.chattingWith

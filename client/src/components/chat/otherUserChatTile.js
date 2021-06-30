@@ -1,9 +1,15 @@
+import {useEffect} from "react";
+import {connect} from "react-redux";
 import {
     Flex,
     Text,
     Avatar,
     Spacer, AvatarBadge
 } from "@chakra-ui/react";
+import {getMessagesStart} from "../../redux/message/message.actions";
+import {createConversationStart, setChattingWith} from "../../redux/conversation/conversation.actions";
+import {createStructuredSelector} from "reselect";
+import {selectIsCreatingConversation} from "../../redux/conversation/conversation.selectors";
 
 const OtherUserChatTile = (
     {
@@ -11,11 +17,36 @@ const OtherUserChatTile = (
         handleActive,
         user,
         currentUser,
-        onlineUsers
+        onlineUsers,
+        conversations,
+        getMessages,
+        setChattingWith,
+        createConversation
     }
 ) => {
     const filterUsers = onlineUsers.filter(user => user.userId !== currentUser.id);
     const isOnline = filterUsers.some(filteredUser => filteredUser.userId === user.id);
+
+    const conversation = conversations.find(conversation => (
+        conversation.members.includes(user.id) && conversation.members.includes(currentUser.id)
+    ));
+
+    useEffect(() => {
+
+    }, [conversations]);
+
+    const handleCreateConversation = () => {
+        if (!conversation) {
+            createConversation({
+                senderId: currentUser.id,
+                receiverId: user.id,
+                user
+            });
+        } else {
+            setChattingWith({...user, conversationId: conversation._id});
+            getMessages(conversation._id);
+        }
+    };
 
     return (
         <Flex
@@ -30,11 +61,12 @@ const OtherUserChatTile = (
                 backgroundColor: "brand.300"
             }}
             onClick={() => {
-                handleActive(user.id)
+                handleActive(user.id);
+                handleCreateConversation();
             }}
         >
             <Avatar size="md" name={user.username}>
-                <AvatarBadge boxSize="1em" bg={isOnline ? "green" : "red"} />
+                <AvatarBadge boxSize="1em" bg={isOnline ? "green" : "red"}/>
             </Avatar>
             <Flex
                 direction="column"
@@ -60,4 +92,14 @@ const OtherUserChatTile = (
     );
 };
 
-export default OtherUserChatTile;
+const mapStateToProps = createStructuredSelector({
+    isCreatingConversation: selectIsCreatingConversation
+});
+
+const mapDispatchToProps = dispatch => ({
+    getMessages: id => dispatch(getMessagesStart(id)),
+    setChattingWith: user => dispatch(setChattingWith(user)),
+    createConversation: payload => dispatch(createConversationStart(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(OtherUserChatTile);

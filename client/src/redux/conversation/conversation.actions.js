@@ -15,6 +15,21 @@ export const getConversationsFailure = error => ({
     payload: error
 });
 
+export const createConversationStart = payload => ({
+    type: ConversationActionTypes.CREATE_CONVERSATION_START,
+    payload
+});
+
+export const createConversationSuccess = payload => ({
+    type: ConversationActionTypes.CREATE_CONVERSATION_SUCCESS,
+    payload
+});
+
+export const createConversationFailure = error => ({
+    type: ConversationActionTypes.CREATE_CONVERSATION_FAILURE,
+    payload: error
+});
+
 export const setChattingWith = user => ({
     type: ConversationActionTypes.SET_CHATTING_WITH,
     payload: user

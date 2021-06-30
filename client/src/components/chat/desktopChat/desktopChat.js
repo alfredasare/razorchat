@@ -170,6 +170,7 @@ const DesktopChat = (
                             handleActive={handleActive}
                             user={user}
                             onlineUsers={onlineUsers}
+                            conversations={conversations}
                         />
                     ))
                 }

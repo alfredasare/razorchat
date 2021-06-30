@@ -4,7 +4,9 @@ const INITIAL_STATE = {
     conversations: [],
     isLoadingConversations: true,
     conversationsError: '',
-    chattingWith: null
+    chattingWith: null,
+    isCreatingConversation: true,
+    createConversationError: ''
 };
 
 const conversationReducer = (state = INITIAL_STATE, action) => {
@@ -28,6 +30,28 @@ const conversationReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 isLoadingConversations: false,
+                conversationsError: action.payload
+            };
+
+        case ConversationActionTypes.CREATE_CONVERSATION_START:
+            return {
+                ...state,
+                isCreatingConversation: true,
+                conversationsError: ''
+            };
+
+        case ConversationActionTypes.CREATE_CONVERSATION_SUCCESS:
+            return {
+                ...state,
+                isCreatingConversation: false,
+                conversationsError: '',
+                conversations: state.conversations.concat(action.payload)
+            };
+
+        case ConversationActionTypes.CREATE_CONVERSATION_FAILURE:
+            return {
+                ...state,
+                isCreatingConversation: false,
                 conversationsError: action.payload
             };
 
