@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import {getUserByIdStart} from "../../redux/user/user.actions";
 import {createStructuredSelector} from "reselect";
-import {selectAllConversationUsers, selectLoadingUserById, selectUserById} from "../../redux/user/user.selectors";
+import {selectAllConversationUsers, selectLoadingUserById} from "../../redux/user/user.selectors";
 import {getMessagesStart} from "../../redux/message/message.actions";
 import {setChattingWith} from "../../redux/conversation/conversation.actions";
 

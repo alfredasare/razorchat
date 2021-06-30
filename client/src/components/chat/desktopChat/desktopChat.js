@@ -1,15 +1,12 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
 import {connect} from "react-redux";
-import {io} from "socket.io-client";
 import {
     Container,
     Flex,
     Grid,
     Heading,
-    Text,
-    Divider
+    Text
 } from "@chakra-ui/react";
-import ChatTile from "../chatTile";
 import SearchForm from "../searchForm";
 import ProfileInfo from "../profileInfo";
 import {createStructuredSelector} from "reselect";
@@ -22,8 +19,10 @@ import {selectAllUsers, selectCurrentUser, selectIsLoadingAllUsers} from "../../
 import {selectAllMessages, selectIsLoadingMessages} from "../../../redux/message/message.selectors";
 import {sendMessageSuccess} from "../../../redux/message/message.actions";
 import {getAllUsersStart} from "../../../redux/user/user.actions";
-import OtherUserChatTile from "../otherUserChatTile";
 import ChatSection from "../chatSection";
+import ConversationsList from "../conversationsList";
+import OtherUsersList from "../otherUsersList";
+import useSocket from "../../../hooks/useSocket";
 
 const DesktopChat = (
     {
@@ -43,8 +42,8 @@ const DesktopChat = (
 ) => {
     const [active, setActive] = useState("");
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const socket = useRef(null);
-    const [newMessage, setNewMessage] = useState(null);
+
+    const {socket, newMessage} = useSocket();
 
     useEffect(() => {
         if (currentUser) {
@@ -62,20 +61,6 @@ const DesktopChat = (
 
         // eslint-disable-next-line
     }, [isLoadingConversations]);
-
-    useEffect(() => {
-        socket.current = io('http://localhost:8000');
-        socket.current.on("getMessage", data => {
-            setNewMessage({
-                sender: data.senderId,
-                text: data.text,
-                createdAt: Date.now(),
-                conversationId: data.conversationId
-            });
-        });
-
-        //  eslint-disable-next-line
-    }, []);
 
     useEffect(() => {
         if (newMessage && chattingWith?.conversationId === newMessage?.conversationId) {
@@ -121,49 +106,24 @@ const DesktopChat = (
 
                 <SearchForm />
 
-                {
-                    isLoadingConversations ? (
-                        <Text mt={5}>
-                            Loading conversations...
-                        </Text>
-                    ) : conversations?.map((item) => (
-                        <ChatTile
-                            key={item._id}
-                            conversation={item}
-                            active={active}
-                            currentUser={currentUser}
-                            handleActive={handleActive}
-                            onlineUsers={onlineUsers}
-                        />
-                    ))
-                }
+                <ConversationsList
+                    isLoadingConversations={isLoadingConversations}
+                    conversations={conversations}
+                    active={active}
+                    handleActive={handleActive}
+                    currentUser={currentUser}
+                    onlineUsers={onlineUsers}
+                />
 
-                {
-                    otherUsers?.length > 0 && (
-                        <>
-                            <Divider mt={5}/>
-                            <Text ml={5} mt={4} fontWeight="bold" color="brand.800">Other Users</Text>
-                        </>
-                    )
-                }
-
-                {
-                    isLoadingOtherUsers ? (
-                        <Text mt={5}>
-                            Loading conversations...
-                        </Text>
-                    ) : otherUsers?.map(user => (
-                        <OtherUserChatTile
-                            key={user.id}
-                            active={active}
-                            currentUser={currentUser}
-                            handleActive={handleActive}
-                            user={user}
-                            onlineUsers={onlineUsers}
-                            conversations={conversations}
-                        />
-                    ))
-                }
+                <OtherUsersList
+                    conversations={conversations}
+                    active={active}
+                    handleActive={handleActive}
+                    currentUser={currentUser}
+                    onlineUsers={onlineUsers}
+                    otherUsers={otherUsers}
+                    isLoadingOtherUsers={isLoadingOtherUsers}
+                />
 
 
             </Container>
