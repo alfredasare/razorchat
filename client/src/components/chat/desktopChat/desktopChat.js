@@ -23,9 +23,11 @@ import {
     selectIsLoadingConversations
 } from "../../../redux/conversation/conversation.selectors";
 import {getConversationsStart} from "../../../redux/conversation/conversation.actions";
-import {selectCurrentUser} from "../../../redux/user/user.selectors";
+import {selectAllUsers, selectCurrentUser, selectIsLoadingAllUsers} from "../../../redux/user/user.selectors";
 import {selectAllMessages, selectIsLoadingMessages} from "../../../redux/message/message.selectors";
 import {sendMessageSuccess} from "../../../redux/message/message.actions";
+import {getAllUsersStart} from "../../../redux/user/user.actions";
+import OtherUserChatTile from "../otherUserChatTile";
 
 const DesktopChat = (
     {
@@ -37,10 +39,14 @@ const DesktopChat = (
         isLoadingMessages,
         messages,
         chattingWith,
-        sendMessage
+        sendMessage,
+        getOtherUsers,
+        otherUsers,
+        isLoadingOtherUsers
     }
 ) => {
     const [active, setActive] = useState("");
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const socket = useRef(null);
     const [newMessage, setNewMessage] = useState(null);
 
@@ -51,6 +57,17 @@ const DesktopChat = (
             getConversations(currentUser.id);
         }
     }, [currentUser, getConversations]);
+
+    useEffect(() => {
+        if (!isLoadingConversations) {
+            getOtherUsers({
+                userId: currentUser.id,
+                conversations
+            });
+        }
+
+        // eslint-disable-next-line
+    }, [isLoadingConversations]);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior: "smooth"});
@@ -81,7 +98,7 @@ const DesktopChat = (
     useEffect(() => {
         currentUser && socket.current.emit("addUser", currentUser?.id);
         socket.current.on("getUsers", users => {
-            console.log(users);
+            setOnlineUsers(users);
         });
 
         // eslint-disable-next-line
@@ -119,16 +136,44 @@ const DesktopChat = (
                         <Text mt={5}>
                             Loading conversations...
                         </Text>
-                    ) : conversations.map((item) => (
+                    ) : conversations?.map((item) => (
                         <ChatTile
                             key={item._id}
                             conversation={item}
                             active={active}
                             currentUser={currentUser}
                             handleActive={handleActive}
+                            onlineUsers={onlineUsers}
                         />
                     ))
                 }
+
+                {
+                    otherUsers?.length > 0 && (
+                        <>
+                            <Divider mt={5}/>
+                            <Text ml={5} mt={4} fontWeight="bold" color="brand.800">Other Users</Text>
+                        </>
+                    )
+                }
+
+                {
+                    isLoadingOtherUsers ? (
+                        <Text mt={5}>
+                            Loading conversations...
+                        </Text>
+                    ) : otherUsers?.map(user => (
+                        <OtherUserChatTile
+                            key={user.id}
+                            active={active}
+                            currentUser={currentUser}
+                            handleActive={handleActive}
+                            user={user}
+                            onlineUsers={onlineUsers}
+                        />
+                    ))
+                }
+
 
             </Container>
 
@@ -226,12 +271,15 @@ const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
     isLoadingMessages: selectIsLoadingMessages,
     messages: selectAllMessages,
-    chattingWith: selectChattingWith
+    chattingWith: selectChattingWith,
+    otherUsers: selectAllUsers,
+    isLoadingOtherUsers: selectIsLoadingAllUsers
 });
 
 const mapDispatchToProps = dispatch => ({
     getConversations: userId => dispatch(getConversationsStart(userId)),
-    sendMessage: message => dispatch(sendMessageSuccess(message))
+    sendMessage: message => dispatch(sendMessageSuccess(message)),
+    getOtherUsers: payload => dispatch(getAllUsersStart(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DesktopChat);

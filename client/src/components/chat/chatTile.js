@@ -21,11 +21,15 @@ const ChatTile = (
         userById,
         getUserById,
         getMessages,
-        setChattingWith
+        setChattingWith,
+        onlineUsers
     }
 ) => {
 
     const otherUserId = conversation.members.find(id => id !== currentUser.id);
+
+    const filterUsers = onlineUsers.filter(user => user.userId !== currentUser.id);
+    const isOnline = filterUsers.some(filteredUser => filteredUser.userId === userById?.id);
 
     useEffect(() => {
         getUserById(otherUserId);
@@ -55,7 +59,7 @@ const ChatTile = (
             }}
         >
             <Avatar size="md" name={userById?.username}>
-                <AvatarBadge boxSize="1em" bg="red" />
+                <AvatarBadge boxSize="1em" bg={isOnline ? "green" : "red"} />
             </Avatar>
             <Flex
                 direction="column"

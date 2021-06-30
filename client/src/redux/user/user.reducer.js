@@ -6,7 +6,10 @@ const INITIAL_VALUE = {
     loadingUserByEmail: false,
     loadingUserById: false,
     userByEmailError: '',
-    userByIdError: ''
+    userByIdError: '',
+    allUsers: null,
+    isLoadingAllUsers: false,
+    allUsersError: ''
 };
 
 const userReducer = (state = INITIAL_VALUE, action) => {
@@ -55,6 +58,27 @@ const userReducer = (state = INITIAL_VALUE, action) => {
                 userByIdError: action.payload
             };
 
+        case UserActionTypes.GET_ALL_USERS_START:
+            return {
+                ...state,
+                allUsersError: '',
+                isLoadingAllUsers: true
+            };
+
+        case UserActionTypes.GET_ALL_USERS_SUCCESS:
+            return {
+                ...state,
+                isLoadingAllUsers: false,
+                allUsersError: '',
+                allUsers: action.payload
+            };
+
+        case UserActionTypes.GET_ALL_USERS_FAILURE:
+            return {
+                ...state,
+                allUsersError: action.payload,
+                isLoadingAllUsers: false
+            };
 
         default:
             return state;

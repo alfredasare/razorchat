@@ -31,3 +31,19 @@ export const getUserByIdFailure = error => ({
     type: UserActionTypes.GET_USER_BY_ID_FAILURE,
     payload: error
 });
+
+//  Get all users
+export const getAllUsersStart = payload => ({
+    type: UserActionTypes.GET_ALL_USERS_START,
+    payload
+});
+
+export const getAllUsersSuccess = users => ({
+    type: UserActionTypes.GET_ALL_USERS_SUCCESS,
+    payload: users
+});
+
+export const getAllUsersFailure = error => ({
+    type: UserActionTypes.GET_ALL_USERS_FAILURE,
+    payload: error
+});

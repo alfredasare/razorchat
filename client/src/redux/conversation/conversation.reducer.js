@@ -2,7 +2,7 @@ import ConversationActionTypes from "./conversation.types";
 
 const INITIAL_STATE = {
     conversations: [],
-    isLoadingConversations: false,
+    isLoadingConversations: true,
     conversationsError: '',
     chattingWith: null
 };

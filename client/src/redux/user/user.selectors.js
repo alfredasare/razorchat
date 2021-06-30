@@ -31,3 +31,18 @@ export const selectUserByIdError = createSelector(
     [selectUser],
     user => user.userByIdError
 );
+
+export const selectAllUsers = createSelector(
+    [selectUser],
+    user => user.allUsers
+);
+
+export const selectIsLoadingAllUsers = createSelector(
+    [selectUser],
+    user => user.isLoadingAllUsers
+);
+
+export const selectAllUsersError = createSelector(
+    [selectUser],
+    user => user.allUsersError
+);

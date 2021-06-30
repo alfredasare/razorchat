@@ -1,7 +1,13 @@
-import {takeLatest, put, all, call} from 'redux-saga/effects';
+import {all, call, put, takeLatest} from 'redux-saga/effects';
 import UserActionTypes from "./user.types";
 import axios from "axios";
-import {getUserByEmailFailure, getUserByEmailSuccess, getUserByIdFailure, getUserByIdSuccess} from "./user.actions";
+import {
+    getAllUsersFailure, getAllUsersSuccess,
+    getUserByEmailFailure,
+    getUserByEmailSuccess,
+    getUserByIdFailure,
+    getUserByIdSuccess
+} from "./user.actions";
 
 
 const baseUrl = 'http://localhost:8000/v1/users';
@@ -34,10 +40,36 @@ function* onGetUserById() {
     yield takeLatest(UserActionTypes.GET_USER_BY_ID_START, getUserById);
 }
 
+function getOtherUsers(userId, allUsers, conversations) {
+    const [conversationUsersArray] = conversations.map(conversation => {
+        return conversation.members.filter(id => id !== userId);
+    });
+
+    const conversationUsers = conversationUsersArray ?? [];
+
+    return allUsers.filter(user => !conversationUsers.includes(user.id));
+}
+
+//  Get All Users
+function* getAllUsers({payload}) {
+    try {
+        const {data} = yield axios.get(`${baseUrl}/all`);
+        const allUsers = data.users.filter(user => user.id !== payload.userId);
+        const otherUsers = getOtherUsers(payload.userId, allUsers, payload.conversations);
+        yield put(getAllUsersSuccess(otherUsers));
+    } catch (e) {
+        yield put(getAllUsersFailure(e.message));
+    }
+}
+
+function* onGetAllUsersStart() {
+    yield takeLatest(UserActionTypes.GET_ALL_USERS_START, getAllUsers);
+}
 
 export function* userSagas() {
     yield all([
         call(onGetUserByEmail),
-        call(onGetUserById)
+        call(onGetUserById),
+        call(onGetAllUsersStart)
     ]);
 }
