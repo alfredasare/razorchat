@@ -27,25 +27,9 @@ async function getAllUsers() {
     });
 }
 
-async function blockUserWithEmail(email: string, emailToBlock: string) {
-    const user:  any = await getUserByEmail(email);
-    const blockedUsers: string[] = user.blockedUsers || [];
-    user.blockedUsers = [...blockedUsers, emailToBlock];
-    await user.save();
-}
-
-async function unblockUserWithEmail(email: string, emailToUnblock: string) {
-    const user:  any = await getUserByEmail(email);
-    const blockedUsers: string[] = user.blockedUsers || [];
-    user.blockedUsers = blockedUsers.filter((email:string) => email !== emailToUnblock);
-    await user.save();
-}
-
 
 export {
     getUserByEmail,
     getUserById,
-    getAllUsers,
-    blockUserWithEmail,
-    unblockUserWithEmail
+    getAllUsers
 };

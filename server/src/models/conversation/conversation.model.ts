@@ -20,8 +20,22 @@ async function getConversation(firstUserId: string, secondUserId: string) {
     });
 }
 
+async function blockUser(senderId: string, userToBlock: string) {
+    const conversation: any = await getConversation(senderId, userToBlock);
+    const isBlocked = !!conversation.blockedBy;
+
+    if (isBlocked) {
+        conversation.blockedBy = "";
+    } else {
+        conversation.blockedBy = senderId;
+    }
+
+    await conversation.save();
+}
+
 export {
     sendConversation,
     getUserConversation,
-    getConversation
+    getConversation,
+    blockUser
 };

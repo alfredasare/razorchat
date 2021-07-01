@@ -1,5 +1,10 @@
 import {Request, Response} from "express";
-import {getConversation, getUserConversation, sendConversation} from "../../models/conversation/conversation.model";
+import {
+    blockUser,
+    getConversation,
+    getUserConversation,
+    sendConversation
+} from "../../models/conversation/conversation.model";
 
 async function httpSendConversation(req: Request, res: Response) {
     try {
@@ -28,8 +33,18 @@ async function httpGetConversation(req: Request, res: Response) {
     }
 }
 
+async function httpBlockUser(req: Request, res: Response) {
+    try {
+        await blockUser(req.body.senderId, req.body.userToBlock);
+        return res.status(200).json({message: "success"});
+    } catch (e) {
+        return res.status(400).json({error: e});
+    }
+}
+
 export {
     httpSendConversation,
     httpGetUserConversation,
-    httpGetConversation
+    httpGetConversation,
+    httpBlockUser
 }
