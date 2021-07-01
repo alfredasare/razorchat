@@ -10,12 +10,9 @@ const userSchema: Schema = new mongoose.Schema({
     tenant: String,
     transaction: Object,
     request_language: String,
-    blockedUsers: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ]
+    blockedUsers: {
+        type: Array
+    }
 });
 
 userSchema.plugin(uniqueValidator);

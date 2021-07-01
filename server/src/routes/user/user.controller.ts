@@ -45,7 +45,8 @@ async function httpBlockUserWithEmail(req: Request, res: Response) {
 
 async function httpUnblockUserWithEmail(req: Request, res: Response) {
     try {
-        await unblockUserWithEmail(req.body.email, req.body.emailToUnblock)
+        await unblockUserWithEmail(req.body.email, req.body.emailToUnblock);
+        return res.status(200).json({message: `User unblocked`});
     } catch (e) {
         return res.status(400).json({error: e});
     }

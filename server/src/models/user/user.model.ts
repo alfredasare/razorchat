@@ -1,4 +1,3 @@
-import {Document} from "mongoose";
 import User from "./user.mongo";
 
 async function getUserByEmail(email: string) {
@@ -31,21 +30,15 @@ async function getAllUsers() {
 async function blockUserWithEmail(email: string, emailToBlock: string) {
     const user:  any = await getUserByEmail(email);
     const blockedUsers: string[] = user.blockedUsers || [];
-    const modifiedUser: Document<any, any> = new User({
-        ...user,
-        blockedUsers: [...blockedUsers, emailToBlock]
-    });
-    await modifiedUser.save();
+    user.blockedUsers = [...blockedUsers, emailToBlock];
+    await user.save();
 }
 
 async function unblockUserWithEmail(email: string, emailToUnblock: string) {
     const user:  any = await getUserByEmail(email);
     const blockedUsers: string[] = user.blockedUsers || [];
-    const modifiedUser: Document<any, any> = new User({
-        ...user,
-        blockedUsers: blockedUsers.filter((email:string) => email !== emailToUnblock)
-    });
-    await modifiedUser.save();
+    user.blockedUsers = blockedUsers.filter((email:string) => email !== emailToUnblock);
+    await user.save();
 }
 
 
