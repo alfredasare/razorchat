@@ -16,17 +16,12 @@ const corsOptions = {
     credentials: true
 };
 
-
 app.use(cors(corsOptions));
-
 app.use(helmet());
-
 app.use(morgan("combined"));
-
 app.use(express.json());
 
 app.use('/v1', api);
-
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
