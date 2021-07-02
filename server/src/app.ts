@@ -14,6 +14,7 @@ const corsOptions = {
         'http://localhost:3000',
         'https://razorchat.vercel.app'
     ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 };
 
