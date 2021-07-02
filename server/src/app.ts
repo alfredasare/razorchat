@@ -11,7 +11,8 @@ const app = express();
 
 const corsOptions = {
     origin: [
-        'http://localhost:3000'
+        'http://localhost:3000',
+        'https://razorchat.vercel.app'
     ],
     credentials: true
 };
