@@ -6,7 +6,10 @@ const INITIAL_STATE = {
     conversationsError: '',
     chattingWith: null,
     isCreatingConversation: true,
-    createConversationError: ''
+    createConversationError: '',
+    isBlockingUser: '',
+    blockUserError: '',
+    blockUserSuccessMessage: ''
 };
 
 const conversationReducer = (state = INITIAL_STATE, action) => {
@@ -59,6 +62,28 @@ const conversationReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 chattingWith: action.payload
+            };
+
+        case ConversationActionTypes.BLOCK_USER_START:
+            return {
+                ...state,
+                isBlockingUser: true,
+                blockUserError: false
+            };
+
+        case ConversationActionTypes.BLOCK_USER_SUCCESS:
+            return {
+                ...state,
+                isBlockingUser: false,
+                blockUserSuccessMessage: action.payload
+            };
+
+        case ConversationActionTypes.BLOCK_USER_FAILURE:
+            return {
+                ...state,
+                isBlockingUser: false,
+                blockUserSuccessMessage: '',
+                blockUserError: action.payload
             };
 
         default:

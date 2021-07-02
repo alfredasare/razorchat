@@ -2,6 +2,7 @@ import {takeLatest, put, all, call} from 'redux-saga/effects';
 import ConversationActionTypes from "./conversation.types";
 import axios from "axios";
 import {
+    blockUserFailure, blockUserSuccess,
     createConversationFailure,
     createConversationSuccess,
     getConversationsFailure,
@@ -46,9 +47,23 @@ function* onCreateConversationStart() {
     yield takeLatest(ConversationActionTypes.CREATE_CONVERSATION_START, createConversation);
 }
 
+function* blockUser({payload}) {
+    try {
+        const {data} = yield axios.post(`${baseUrl}/block`, {...payload});
+        yield put(blockUserSuccess(data.message));
+    } catch (e) {
+        yield put(blockUserFailure(e.message));
+    }
+}
+
+function* onBlockUserStart() {
+    yield takeLatest(ConversationActionTypes.BLOCK_USER_START, blockUser);
+}
+
 export function* conversationSagas() {
     yield all([
         call(onGetConversationsStart),
-        call(onCreateConversationStart)
+        call(onCreateConversationStart),
+        call(onBlockUserStart)
     ]);
 }

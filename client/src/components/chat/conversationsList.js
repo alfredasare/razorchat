@@ -26,14 +26,25 @@ const ConversationsList = (
             const blockedConversation = conversations?.find(conversation => (
                 conversation._id === updatedConversation.conversationId
             ));
-            console.log(blockedConversation);
             setNewConversations([
                 blockedConversation,
                 ...newConversations
             ]);
         } else {
-            setNewConversations(conversations);
+            const userConversations = conversations?.filter(conversation => {
+                if (conversation?.blockedBy) {
+                    return conversation.blockedBy === currentUser.id
+                } else {
+                    return true;
+                }
+            });
+
+
+            // setNewConversations(conversations);
+            setNewConversations(userConversations);
         }
+
+        // eslint-disable-next-line
     }, [updatedConversation, conversations]);
 
     if (isLoadingConversations) {

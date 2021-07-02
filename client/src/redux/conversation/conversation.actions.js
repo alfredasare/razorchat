@@ -34,3 +34,18 @@ export const setChattingWith = user => ({
     type: ConversationActionTypes.SET_CHATTING_WITH,
     payload: user
 });
+
+export const blockUserStart = payload => ({
+    type: ConversationActionTypes.BLOCK_USER_START,
+    payload
+});
+
+export const blockUserSuccess = successMessage => ({
+    type: ConversationActionTypes.BLOCK_USER_SUCCESS,
+    payload: successMessage
+});
+
+export const blockUserFailure = error => ({
+    type: ConversationActionTypes.BLOCK_USER_FAILURE,
+    payload: error
+});
