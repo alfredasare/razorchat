@@ -13,8 +13,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "timeago.js": "^4.0.2"
-  }
+  "license": "ISC"
 }
