@@ -14,7 +14,8 @@ const ConversationInfo = (
         currentUser,
         updatedConversation,
         blockUser,
-        setChattingWith
+        setChattingWith,
+        onlineUsers
     }
 ) => {
     const {socket} = useSocket();
@@ -26,16 +27,19 @@ const ConversationInfo = (
 
     const receiverId = conversation.members.find(id => id !== currentUser.id);
 
+    const isOnline = onlineUsers.find(user => user.userId === receiverId);
+
     useEffect(() => {
         if (conversations && conversation) {
-            console.log("asdas",conversation?.blockedBy);
             if (conversation.blockedBy) {
                 setIsBlocked(true);
             } else {
                 setIsBlocked(false);
             }
         }
-    }, [conversations, conversation]);
+
+        //  eslint-disable-next-line
+    }, [conversation]);
 
     useEffect(() => {
         if (!!updatedConversation?.isBlocked || conversation?.blockedBy) {
@@ -87,7 +91,7 @@ const ConversationInfo = (
                 alignItems="center"
             >
                 <Avatar ml={5} size="md" name={chattingWith.username}>
-                    <AvatarBadge boxSize="1em" bg="green.500"/>
+                    <AvatarBadge boxSize="1em" bg={isOnline ? "green" : "red"} />
                 </Avatar>
                 <Text ml={4} textTransform="capitalize">
                     {chattingWith.username}

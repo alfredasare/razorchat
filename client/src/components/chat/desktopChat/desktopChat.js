@@ -155,6 +155,7 @@ const DesktopChat = (
                             isLoadingMessages={isLoadingMessages}
                             socket={socket}
                             updatedConversation={updatedConversation}
+                            onlineUsers={onlineUsers}
                         />
                     )
             }

@@ -1,4 +1,5 @@
 import ConversationActionTypes from "./conversation.types";
+import {updateConversations} from "./conversation.helper";
 
 const INITIAL_STATE = {
     conversations: [],
@@ -8,8 +9,7 @@ const INITIAL_STATE = {
     isCreatingConversation: true,
     createConversationError: '',
     isBlockingUser: '',
-    blockUserError: '',
-    blockUserSuccessMessage: ''
+    blockUserError: ''
 };
 
 const conversationReducer = (state = INITIAL_STATE, action) => {
@@ -75,14 +75,13 @@ const conversationReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 isBlockingUser: false,
-                blockUserSuccessMessage: action.payload
+                conversations: updateConversations(state.conversations, action.payload)
             };
 
         case ConversationActionTypes.BLOCK_USER_FAILURE:
             return {
                 ...state,
                 isBlockingUser: false,
-                blockUserSuccessMessage: '',
                 blockUserError: action.payload
             };
 

@@ -31,6 +31,7 @@ async function blockUser(senderId: string, userToBlock: string) {
     }
 
     await conversation.save();
+    return conversation;
 }
 
 export {

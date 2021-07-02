@@ -35,8 +35,8 @@ async function httpGetConversation(req: Request, res: Response) {
 
 async function httpBlockUser(req: Request, res: Response) {
     try {
-        await blockUser(req.body.senderId, req.body.userToBlock);
-        return res.status(200).json({message: "success"});
+        const conversation = await blockUser(req.body.senderId, req.body.userToBlock);
+        return res.status(200).json({conversation});
     } catch (e) {
         return res.status(400).json({error: e});
     }

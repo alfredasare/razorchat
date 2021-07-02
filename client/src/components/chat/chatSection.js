@@ -6,7 +6,17 @@ import MessageForm from "./messageForm";
 import ConversationInfo from "./conversationInfo";
 
 
-const ChatSection = ({chattingWith, currentUser, isLoadingMessages, messages, socket, updatedConversation}) => {
+const ChatSection = (
+    {
+        chattingWith,
+        currentUser,
+        isLoadingMessages,
+        messages,
+        socket,
+        updatedConversation,
+        onlineUsers
+    }
+) => {
     const scrollRef = useRef();
 
     useEffect(() => {
@@ -18,7 +28,8 @@ const ChatSection = ({chattingWith, currentUser, isLoadingMessages, messages, so
             direction="column"
             flex="1 0 auto"
         >
-            <ConversationInfo chattingWith={chattingWith} currentUser={currentUser} updatedConversation={updatedConversation}/>
+            <ConversationInfo chattingWith={chattingWith} currentUser={currentUser}
+                              updatedConversation={updatedConversation} onlineUsers={onlineUsers}/>
 
             <Divider/>
 

@@ -50,7 +50,7 @@ function* onCreateConversationStart() {
 function* blockUser({payload}) {
     try {
         const {data} = yield axios.post(`${baseUrl}/block`, {...payload});
-        yield put(blockUserSuccess(data.message));
+        yield put(blockUserSuccess(data.conversation));
     } catch (e) {
         yield put(blockUserFailure(e.message));
     }
