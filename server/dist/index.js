@@ -68,7 +68,7 @@ var config_1 = require("./utils/config");
 var server = http_1.default.createServer(app_1.default);
 var io = new socket_io_1.Server(server, {
     cors: {
-        origin: 'http://localhost:3000'
+        origin: '*'
     }
 });
 listeners_1.default(io);

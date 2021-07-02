@@ -12,7 +12,7 @@ import {getMessagesStart} from "../message/message.actions";
 import {updateConversationUsers} from "../user/user.actions";
 
 
-const baseUrl = 'http://localhost:8000/v1/conversations';
+const baseUrl = 'https://razorchat-server.vercel.app/v1/conversations';
 
 function* getConversations({payload}) {
     try {

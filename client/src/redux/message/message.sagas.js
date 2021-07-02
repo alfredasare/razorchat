@@ -3,7 +3,7 @@ import MessageActionTypes from "./message.types";
 import axios from "axios";
 import {getMessagesFailure, getMessagesSuccess, sendMessageFailure, sendMessageSuccess} from "./message.actions";
 
-const baseUrl = 'http://localhost:8000/v1/messages';
+const baseUrl = 'https://razorchat-server.vercel.app/v1/messages';
 
 function* getAllMessages({payload}) {
     try {

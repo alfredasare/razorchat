@@ -10,7 +10,7 @@ import {
 } from "./user.actions";
 
 
-const baseUrl = 'http://localhost:8000/v1/users';
+const baseUrl = 'https://razorchat-server.vercel.app/v1/users';
 
 //  Get user by email
 function* getUserByEmail({payload}) {
