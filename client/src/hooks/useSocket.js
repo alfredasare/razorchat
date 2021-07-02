@@ -9,7 +9,7 @@ const useSocket = () => {
     const [updatedConversation, setUpdatedConversation] = useState(null);
 
     useEffect(() => {
-        socket.current = io('http://localhost:8000');
+        socket.current = io('https://razorchat-server.vercel.app');
 
         socket.current.on("getMessage", data => {
             setNewMessage({
