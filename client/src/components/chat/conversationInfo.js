@@ -18,7 +18,7 @@ const ConversationInfo = (
     }
 ) => {
     const {socket} = useSocket();
-    const [isBlocked, setIsBlocked] = useState(true);
+    const [isBlocked, setIsBlocked] = useState(false);
 
     const conversation = conversations?.find(conversation => (
         conversation.members.includes(currentUser.id) && conversation.members.includes(chattingWith.id)
@@ -27,25 +27,34 @@ const ConversationInfo = (
     const receiverId = conversation.members.find(id => id !== currentUser.id);
 
     useEffect(() => {
+        if (conversations && conversation) {
+            console.log("asdas",conversation?.blockedBy);
+            if (conversation.blockedBy) {
+                setIsBlocked(true);
+            } else {
+                setIsBlocked(false);
+            }
+        }
+    }, [conversations, conversation]);
+
+    useEffect(() => {
         if (!!updatedConversation?.isBlocked || conversation?.blockedBy) {
-
-            setIsBlocked(true);
-
             if (
                 updatedConversation?.userToBlock === currentUser.id &&
                 updatedConversation?.conversationId === chattingWith.conversationId
             ) {
                 setChattingWith(null);
             }
-
-        } else {
-            setIsBlocked(false);
         }
-
         // eslint-disable-next-line
     }, [updatedConversation]);
 
     const handleBlock = () => {
+        if (isBlocked) {
+            setIsBlocked(false);
+        } else {
+            setIsBlocked(true);
+        }
         if (!isBlocked) {
             socket.current.emit("blockUser", {
                 senderId: currentUser.id,
