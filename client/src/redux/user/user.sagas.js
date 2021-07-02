@@ -10,7 +10,7 @@ import {
 } from "./user.actions";
 
 
-const baseUrl = 'https://razorchat-server.vercel.app/v1/users';
+const baseUrl = 'https://sheltered-basin-90253.herokuapp.com/v1/users';
 
 //  Get user by email
 function* getUserByEmail({payload}) {

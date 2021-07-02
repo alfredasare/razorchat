@@ -12,7 +12,7 @@ import {getMessagesStart} from "../message/message.actions";
 import {updateConversationUsers} from "../user/user.actions";
 
 
-const baseUrl = 'https://razorchat-server.vercel.app/v1/conversations';
+const baseUrl = 'https://sheltered-basin-90253.herokuapp.com/v1/conversations';
 
 function* getConversations({payload}) {
     try {

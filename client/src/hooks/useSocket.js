@@ -9,7 +9,7 @@ const useSocket = () => {
     const [updatedConversation, setUpdatedConversation] = useState(null);
 
     useEffect(() => {
-        socket.current = io('https://razorchat-server.vercel.app');
+        socket.current = io('https://sheltered-basin-90253.herokuapp.com');
 
         socket.current.on("getMessage", data => {
             setNewMessage({
