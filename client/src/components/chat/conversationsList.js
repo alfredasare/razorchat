@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react";
 import {Text} from "@chakra-ui/react";
 import ChatTile from "./chatTile";
 
@@ -9,9 +10,31 @@ const ConversationsList = (
         active,
         handleActive,
         currentUser,
-        onlineUsers
+        onlineUsers,
+        updatedConversation
     }
 ) => {
+    const [newConversations, setNewConversations] = useState([]);
+
+    useEffect(() => {
+        if (updatedConversation?.isBlocked === true && updatedConversation?.userToBlock === currentUser?.id) {
+            const filteredConversations = conversations?.filter(conversation => (
+                conversation._id !== updatedConversation.conversationId
+            ));
+            setNewConversations(filteredConversations);
+        } else if (updatedConversation?.isBlocked === false && updatedConversation?.userToUnblock === currentUser?.id) {
+            const blockedConversation = conversations?.find(conversation => (
+                conversation._id === updatedConversation.conversationId
+            ));
+            console.log(blockedConversation);
+            setNewConversations([
+                blockedConversation,
+                ...newConversations
+            ]);
+        } else {
+            setNewConversations(conversations);
+        }
+    }, [updatedConversation, conversations]);
 
     if (isLoadingConversations) {
         return (
@@ -22,7 +45,7 @@ const ConversationsList = (
     }
 
     return (
-        conversations?.map((item) => (
+        newConversations?.map((item) => (
             <ChatTile
                 key={item._id}
                 conversation={item}

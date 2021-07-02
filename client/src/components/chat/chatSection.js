@@ -1,11 +1,12 @@
-import {Avatar, AvatarBadge, Box, Button, Divider, Flex, Text} from "@chakra-ui/react";
+import {useEffect, useRef} from "react";
+import {Box, Divider, Flex, Text} from "@chakra-ui/react";
 import {v4} from "uuid";
 import ChatBubble from "./chatBubble";
 import MessageForm from "./messageForm";
-import {useEffect, useRef} from "react";
+import ConversationInfo from "./conversationInfo";
 
 
-const ChatSection = ({chattingWith, currentUser, isLoadingMessages, messages, socket}) => {
+const ChatSection = ({chattingWith, currentUser, isLoadingMessages, messages, socket, updatedConversation}) => {
     const scrollRef = useRef();
 
     useEffect(() => {
@@ -17,29 +18,7 @@ const ChatSection = ({chattingWith, currentUser, isLoadingMessages, messages, so
             direction="column"
             flex="1 0 auto"
         >
-            <Flex
-                flex="0 0 60px"
-                alignItems="center"
-                justifyContent="space-between"
-                py={2}
-            >
-                <Flex
-                    alignItems="center"
-                >
-                    <Avatar ml={5} size="md" name={chattingWith.username}>
-                        <AvatarBadge boxSize="1em" bg="green.500"/>
-                    </Avatar>
-                    <Text ml={4} textTransform="capitalize">
-                        {chattingWith.username}
-                    </Text>
-                </Flex>
-                <Button
-                    mr={5}
-                    color="brand.400"
-                >
-                    Block {chattingWith.username}
-                </Button>
-            </Flex>
+            <ConversationInfo chattingWith={chattingWith} currentUser={currentUser} updatedConversation={updatedConversation}/>
 
             <Divider/>
 

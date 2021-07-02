@@ -43,7 +43,11 @@ const DesktopChat = (
     const [active, setActive] = useState("");
     const [onlineUsers, setOnlineUsers] = useState([]);
 
-    const {socket, newMessage} = useSocket();
+    const {socket, newMessage, updatedConversation} = useSocket();
+
+    useEffect(() => {
+
+    }, [updatedConversation]);
 
     useEffect(() => {
         if (currentUser) {
@@ -113,6 +117,7 @@ const DesktopChat = (
                     handleActive={handleActive}
                     currentUser={currentUser}
                     onlineUsers={onlineUsers}
+                    updatedConversation={updatedConversation}
                 />
 
                 <OtherUsersList
@@ -149,6 +154,7 @@ const DesktopChat = (
                             messages={messages}
                             isLoadingMessages={isLoadingMessages}
                             socket={socket}
+                            updatedConversation={updatedConversation}
                         />
                     )
             }
