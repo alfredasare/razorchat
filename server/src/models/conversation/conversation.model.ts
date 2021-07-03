@@ -1,11 +1,17 @@
 import Conversation from "./conversation.mongo";
 
 async function sendConversation(senderId: string, receiverId: string) {
-    const newConversation = new Conversation({
-        members: [senderId, receiverId]
-    });
+    const oldConversation = await getConversation(senderId, receiverId);
 
-    return newConversation.save();
+    if (oldConversation) {
+        return oldConversation;
+    } else {
+        const newConversation = new Conversation({
+            members: [senderId, receiverId]
+        });
+
+        return newConversation.save();
+    }
 }
 
 async function getUserConversation(userId: string) {
