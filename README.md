@@ -53,3 +53,7 @@ works for Unix-based systems. On Windows, an external package like `concurrently
 * Socketio
 * Morgan
 * Auth0
+
+## Hosting
+* The client side was hosted on Vercel
+* The server was hosted on Heroku
