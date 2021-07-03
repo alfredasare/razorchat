@@ -12,7 +12,7 @@ const ProfileInfo = ({name, email}) => {
 
     return (
         <Flex
-            direction="row"
+            direction={["column", "column", "column", "row"]}
             w="100%"
             justifyContent="space-between"
             alignItems="center"

@@ -7,7 +7,6 @@ import {
     Heading,
     Text
 } from "@chakra-ui/react";
-import SearchForm from "../searchForm";
 import ProfileInfo from "../profileInfo";
 import {createStructuredSelector} from "reselect";
 import {
@@ -77,11 +76,17 @@ const DesktopChat = (
     useEffect(() => {
         currentUser && socket.current.emit("addUser", currentUser?.id);
         socket.current.on("getUsers", users => {
+            if (!isLoadingConversations && users.length !== onlineUsers.length) {
+                getOtherUsers({
+                    userId: currentUser?.id,
+                    conversations
+                });
+            }
             setOnlineUsers(users);
         });
 
         // eslint-disable-next-line
-    }, [currentUser]);
+    }, [currentUser, isLoadingConversations]);
 
     const handleActive = (chatTileId) => {
         setActive(chatTileId);
@@ -92,7 +97,6 @@ const DesktopChat = (
             gridTemplateColumns="1fr 2fr"
             h="100%"
             w="100%"
-            display={["none", "grid"]}
             overflowY="hidden"
         >
             <Container
@@ -104,11 +108,10 @@ const DesktopChat = (
                     as="h2"
                     size="xl"
                     py={3}
+                    px={5}
                 >
                     Chats
                 </Heading>
-
-                <SearchForm />
 
                 <ConversationsList
                     isLoadingConversations={isLoadingConversations}

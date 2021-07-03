@@ -71,7 +71,7 @@ const userReducer = (state = INITIAL_VALUE, action) => {
                 ...state,
                 isLoadingAllUsers: false,
                 allUsersError: '',
-                allUsers: state.allUsers.concat(action.payload)
+                allUsers: action.payload
             };
 
         case UserActionTypes.GET_ALL_USERS_FAILURE:

@@ -43,12 +43,23 @@ exports.blockUser = exports.getConversation = exports.getUserConversation = expo
 var conversation_mongo_1 = __importDefault(require("./conversation.mongo"));
 function sendConversation(senderId, receiverId) {
     return __awaiter(this, void 0, void 0, function () {
-        var newConversation;
+        var oldConversation, newConversation;
         return __generator(this, function (_a) {
-            newConversation = new conversation_mongo_1.default({
-                members: [senderId, receiverId]
-            });
-            return [2 /*return*/, newConversation.save()];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getConversation(senderId, receiverId)];
+                case 1:
+                    oldConversation = _a.sent();
+                    if (oldConversation) {
+                        return [2 /*return*/, oldConversation];
+                    }
+                    else {
+                        newConversation = new conversation_mongo_1.default({
+                            members: [senderId, receiverId]
+                        });
+                        return [2 /*return*/, newConversation.save()];
+                    }
+                    return [2 /*return*/];
+            }
         });
     });
 }
